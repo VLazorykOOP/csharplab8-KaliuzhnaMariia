@@ -12,9 +12,11 @@ switch (choice){
         Task2 lab8task2 = new Task2();
         lab8task2.Run();
     }break;
+    case 3:{
+        Task3 lab8task3 = new Task3();
+        lab8task3.Run();
+    }break;
 }
-
-
 class Task1{
     public void Run(){
         Console.WriteLine("Enter the path to the file with text:");
@@ -90,5 +92,36 @@ class Task2{
 
         occurrences = regex.Matches(text).Count;
         return regex.Replace(text, "...");
+    }
+}
+
+class Task3{
+    public void Run(){
+        try{
+            Console.WriteLine("Enter the path to the input file:");
+            string inputFile = Console.ReadLine();
+
+            Console.WriteLine("Enter the path to the output file:");
+            string outputFile = Console.ReadLine();
+
+            string inputText = File.ReadAllText(inputFile);
+
+            int occurrences;
+            string replacedText = RemoveDuplicates(inputText, out occurrences);
+
+            File.WriteAllText(outputFile, replacedText);
+
+            Console.WriteLine($"Replacement completed. {occurrences} occurrences replaced. Check the output file for the result.");
+        }
+        catch (Exception ex){
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public string RemoveDuplicates(string text, out int occurrences){
+        string[] words = text.Split(new char[] { ' ', ',', '.', '!', '?', ':', ';', '-', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        HashSet<string> uniqueWords = new HashSet<string>(words, StringComparer.OrdinalIgnoreCase);
+        occurrences = words.Length - uniqueWords.Count;
+        return string.Join(" ", uniqueWords);
     }
 }
